@@ -1,10 +1,5 @@
 import { sumArray } from '../../utils/array'
-
-const parseInput = (input: string): number[] =>
-  input
-    .trim()
-    .split('\n')
-    .map(str => Number(str.trim()))
+import { parseMultiLineInput } from '../../utils/input'
 
 const getFuel = (n: number): number => Math.floor(n / 3) - 2
 const getFuelRecursive = (n: number): number => {
@@ -13,11 +8,11 @@ const getFuelRecursive = (n: number): number => {
 }
 
 export const part1 = (input: string): number => {
-  const values = parseInput(input)
+  const values = parseMultiLineInput(input, Number)
   return sumArray(values.map(getFuel))
 }
 
 export const part2 = (input: string): number => {
-  const values = parseInput(input)
+  const values = parseMultiLineInput(input, Number)
   return sumArray(values.map(getFuelRecursive))
 }
