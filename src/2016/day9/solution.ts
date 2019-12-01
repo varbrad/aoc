@@ -69,6 +69,5 @@ const calculateNode = (node: Node): number => {
 export const part2 = (input: string): number => {
   input = parseLineInput(input)
   const nodes = getNodes(input)
-  console.log(nodes)
   return sumArray(nodes.map(calculateNode))
 }
