@@ -6,8 +6,7 @@
     "lint": "eslint src --ext .ts",
     "start": "ts-node-dev",
     "test": "jest",
-    "tsc": "tsc --noEmit",
-    "upgrade": "npm-check --update"
+    "tsc": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
@@ -18,7 +17,6 @@
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
     "jest": "^24.9.0",
-    "npm-check": "^5.9.0",
     "prettier": "^1.19.1",
     "ts-jest": "^24.2.0",
     "typescript": "^3.7.2"

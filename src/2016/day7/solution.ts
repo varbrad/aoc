@@ -36,7 +36,7 @@ const getSSLMatches = (str: string): string[] => {
   return matches
 }
 
-const invertMatch = (str: string) => {
+const invertMatch = (str: string): string => {
   const [a, b] = [str[0], str[1]]
   return `${b}${a}${b}`
 }
