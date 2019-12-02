@@ -26,6 +26,7 @@ module.exports = {
         'groups': ['builtin', 'external', 'parent', 'sibling', 'index'],
         'newlines-between': 'never'
       }
-    ]
+    ],
+    '@typescript-eslint/explicit-function-return-type': [ERROR, { allowExpressions: true }]
   },
 }

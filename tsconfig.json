@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "target": "es2019",
     "lib": ["esnext", "dom"],
     "sourceMap": true,
-    "resolveJsonModule": true,
     "strict": true
   }
 }
