@@ -1,4 +1,3 @@
-import { stringify } from 'querystring'
 import { parseMultiLineInput } from '../../utils/input'
 
 type Password = string[]
