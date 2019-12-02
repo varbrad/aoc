@@ -15,13 +15,16 @@ const runInstruction = (
   return [false, index + 4]
 }
 
-export const part1 = (input: string, restoreGravityAssist = false): number => {
+export const part1 = (
+  input: string,
+  gravityAssist?: [number, number],
+): number => {
   const instructions = parseLineInput(input)
     .split(',')
     .map(Number)
-  if (restoreGravityAssist) {
-    instructions[1] = 12
-    instructions[2] = 2
+  if (gravityAssist) {
+    instructions[1] = gravityAssist[0]
+    instructions[2] = gravityAssist[1]
   }
   let index = 0
   for (let i = 0; i < 50000; ++i) {
@@ -30,7 +33,17 @@ export const part1 = (input: string, restoreGravityAssist = false): number => {
     index = newIndex
   }
 
-  console.log(instructions)
-
   return instructions[0]
+}
+
+export const part2 = (input: string, magicNumber: number): number => {
+  for (let a = 0; a < 100; ++a) {
+    const rough = part1(input, [a, 0])
+    if (magicNumber - rough > 100) continue
+    for (let b = 0; b < 100; ++b) {
+      const val = part1(input, [a, b])
+      if (val === magicNumber) return 100 * a + b
+    }
+  }
+  return -1
 }

@@ -19,6 +19,6 @@ describe('2019 - Day 2 - Part 1', () => {
   })
   it('should solve puzzle input', () => {
     const input = readFile(__dirname, 'input.txt')
-    expect(part1(input, true)).toMatchInlineSnapshot(`3085697`)
+    expect(part1(input, [12, 2])).toMatchInlineSnapshot(`3085697`)
   })
 })
