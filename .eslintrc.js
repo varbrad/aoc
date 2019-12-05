@@ -17,7 +17,7 @@ module.exports = {
   },
   rules: {
     // Plain Eslint
-    'complexity': [ERROR, 5],
+    'complexity': [ERROR, 10],
     // Import
     'import/no-unresolved': IGNORE,
     'import/order': [
