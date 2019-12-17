@@ -113,7 +113,6 @@ class IntcodeVM2 implements IntcodeVM {
   }
 
   public addOutput(value: number): void {
-    console.log(this.ticks, value, this.relativeBaseOffset)
     this.outputs.push(value)
   }
 
