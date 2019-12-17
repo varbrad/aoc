@@ -51,6 +51,11 @@ class IntcodeVM2 implements IntcodeVM {
     return lastState
   }
 
+  public runAndOutput(): number {
+    this.run()
+    return this.getLastOutput()
+  }
+
   public getParameterValue(parameter: IntcodeParameter): number {
     if (parameter.mode === IntcodeParameterMode.IMMEDIATE)
       return parameter.value
@@ -92,7 +97,7 @@ class IntcodeVM2 implements IntcodeVM {
     this.outputs.push(value)
   }
 
-  public getLastOutput(): number | undefined {
+  public getLastOutput(): number {
     return this.outputs[this.outputs.length - 1]
   }
 
