@@ -4,7 +4,7 @@ import { Opcode, ParameterMode, Parameter, OpCodeParameters } from './opcodes'
 export interface IntcodeState {
   memory: number[]
   index: number
-  input?: number
+  input?: number[]
   output: number[]
 }
 
@@ -57,9 +57,9 @@ const mutateState = (state: IntcodeState): boolean => {
         getValue(state, params[0]) * getValue(state, params[1])
       break
     case Opcode.IN:
-      if (state.input === undefined)
+      if (state.input === undefined || state.input.length === 0)
         throw new Error('Must have input with IN opcode!')
-      state.memory[params[0].value] = state.input
+      state.memory[params[0].value] = state.input.shift() as number
       break
     case Opcode.OUT:
       state.output.push(getValue(state, params[0]))

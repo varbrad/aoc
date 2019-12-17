@@ -12,3 +12,8 @@ export const shallowArrayEqual = <T>(a: T[], b: T[]): boolean => {
 export const flatten = <T>(a: T[][]): T[] => {
   return a.flatMap(v => v)
 }
+
+export const ensureArray = <T>(a: T | T[]): T[] => {
+  if (Array.isArray(a)) return a
+  return [a]
+}
