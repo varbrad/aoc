@@ -1,6 +1,6 @@
 import { IntcodeInstructionBlock, IntcodeStatus } from './types'
 import IntcodeVM2 from './vm'
-import { IntcodeInstruction } from './opcodes'
+import { IntcodeInstruction, IntcodeParameterMode } from './opcodes'
 
 interface ProcessInterface {
   vm: IntcodeVM2
@@ -83,6 +83,13 @@ class IntcodeInstructionProcessor {
     )
   }
 
+  public static rbo(context: ProcessInterface): IntcodeStatus {
+    const params = this.getParameters(context)
+    context.vm.movePointer(2)
+    context.vm.moveRelativeBaseOffset(params[0])
+    return IntcodeStatus.OK
+  }
+
   public static exit(): IntcodeStatus {
     return IntcodeStatus.EXIT
   }
@@ -97,9 +104,12 @@ class IntcodeInstructionProcessor {
 
   private static getDestination(context: ProcessInterface): number {
     const { parameters } = context.block
-    return parameters[parameters.length - 1].value
+    const lastParam = parameters[parameters.length - 1]
+    if (lastParam.mode === IntcodeParameterMode.POSITION) return lastParam.value
+    return context.vm.getRelativeBaseOffset() + lastParam.value
   }
 
+  // eslint-disable-next-line complexity
   private static getStrategy(
     block: IntcodeInstructionBlock,
   ): ProcessingStrategy {
@@ -120,6 +130,8 @@ class IntcodeInstructionProcessor {
         return this.lt
       case IntcodeInstruction.EQ:
         return this.eq
+      case IntcodeInstruction.RBO:
+        return this.rbo
       case IntcodeInstruction.EXIT:
         return this.exit
       default:

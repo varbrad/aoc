@@ -20,6 +20,8 @@ class IntcodeVM2 implements IntcodeVM {
   private pointer = 0
   private inputs: number[] = []
   private outputs: number[] = []
+  private relativeBaseOffset = 0
+  private ticks = 0
 
   constructor(...args: Parameters<IntcodeVM2['reset']>) {
     this.reset(...args)
@@ -35,6 +37,8 @@ class IntcodeVM2 implements IntcodeVM {
     this.pointer = 0
     this.inputs = []
     this.outputs = []
+    this.relativeBaseOffset = 0
+    this.ticks = 0
     if (input) this.addInput(input)
   }
 
@@ -59,11 +63,18 @@ class IntcodeVM2 implements IntcodeVM {
   public getParameterValue(parameter: IntcodeParameter): number {
     if (parameter.mode === IntcodeParameterMode.IMMEDIATE)
       return parameter.value
-    return this.memory[parameter.value]
+    if (parameter.mode === IntcodeParameterMode.RELATIVE) {
+      return this.get(parameter.value + this.relativeBaseOffset)
+    }
+    return this.get(parameter.value)
   }
 
   public getParameterValues(parameters: IntcodeParameter[]): number[] {
     return parameters.map(this.getParameterValue.bind(this))
+  }
+
+  public getRelativeBaseOffset(): number {
+    return this.relativeBaseOffset
   }
 
   public set(index: number, value: number): IntcodeStatus {
@@ -72,7 +83,7 @@ class IntcodeVM2 implements IntcodeVM {
   }
 
   public get(index: number): number {
-    return this.memory[index]
+    return this.memory[index] || 0
   }
 
   public setPointer(index: number): void {
@@ -81,6 +92,14 @@ class IntcodeVM2 implements IntcodeVM {
 
   public movePointer(dIndex: number): void {
     this.pointer += dIndex
+  }
+
+  public setRelativeBaseOffset(rbo: number): void {
+    this.relativeBaseOffset = rbo
+  }
+
+  public moveRelativeBaseOffset(drbo: number): void {
+    this.relativeBaseOffset += drbo
   }
 
   public hasAvailableInput(): boolean {
@@ -94,6 +113,7 @@ class IntcodeVM2 implements IntcodeVM {
   }
 
   public addOutput(value: number): void {
+    console.log(this.ticks, value, this.relativeBaseOffset)
     this.outputs.push(value)
   }
 
@@ -107,6 +127,10 @@ class IntcodeVM2 implements IntcodeVM {
 
   public addInput(input: number | number[]): void {
     this.inputs.push(...ensureArray(input))
+  }
+
+  public getTicks(): number {
+    return this.ticks
   }
 
   private getInstruction(
@@ -140,8 +164,9 @@ class IntcodeVM2 implements IntcodeVM {
 
   private tick(): IntcodeStatus {
     const instructionBlock = this.getInstructionBlock()
-    //
-    return IntcodeInstructionProcessor.process(this, instructionBlock)
+    const status = IntcodeInstructionProcessor.process(this, instructionBlock)
+    if (status === IntcodeStatus.OK) this.ticks++
+    return status
   }
 }
 

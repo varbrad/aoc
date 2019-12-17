@@ -7,6 +7,7 @@ export enum IntcodeInstruction {
   JIF = 6,
   LT = 7,
   EQ = 8,
+  RBO = 9,
   EXIT = 99,
 }
 
@@ -19,12 +20,14 @@ export const IntcodeParameterLength: Record<IntcodeInstruction, number> = {
   [IntcodeInstruction.JIF]: 2,
   [IntcodeInstruction.LT]: 3,
   [IntcodeInstruction.EQ]: 3,
+  [IntcodeInstruction.RBO]: 1,
   [IntcodeInstruction.EXIT]: 0,
 }
 
 export enum IntcodeParameterMode {
   POSITION = 0,
   IMMEDIATE = 1,
+  RELATIVE = 2,
 }
 
 export interface IntcodeParameter {
