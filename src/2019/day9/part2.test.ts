@@ -1,4 +1,3 @@
-// import { readFile } from '../../utils/readFile'
 import IntcodeVM2 from '../shared/intcode-2/vm'
 import { IntcodeStatus } from '../shared/intcode-2/types'
 import { readFile } from '../../utils/readFile'
