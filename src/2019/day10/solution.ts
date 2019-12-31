@@ -74,20 +74,91 @@ const canDetectAsteroid = (
   return result
 }
 
+interface Result {
+  asteroid: Asteroid
+  detects: number
+}
+
 export const part1 = (input: string): number => {
   const asteroids = getAsteroids(input)
 
-  const detections = asteroids.map(start => {
+  const detections: Result[] = asteroids.map(start => {
     let count = 0
     for (let i = 0; i < asteroids.length; ++i) {
       const target = asteroids[i]
       const detected = canDetectAsteroid(start, target, asteroids)
       if (detected) count++
     }
-    return count
+    return { asteroid: start, detects: count }
   })
 
-  const max = detections.reduce((prev, curr) => (prev < curr ? curr : prev), 0)
+  const max = detections.reduce((prev: Result | null, curr) => {
+    if (prev === null) return curr
+    return curr.detects > prev.detects ? curr : prev
+  }, null)
 
-  return max
+  console.log(max?.asteroid)
+  return max?.detects || -1
+}
+
+interface AsteroidAngle {
+  asteroid: Asteroid
+  distance: number
+  angle: number
+  vaporized?: boolean
+}
+
+const calcAngle = (a: Asteroid, b: Asteroid): AsteroidAngle => {
+  let angle = Math.atan2(b.y - a.y, b.x - a.x) - Math.PI / 2
+  if (angle < 0) angle += Math.PI * 2
+  const dist = distance(a, b)
+  return { asteroid: a, angle, distance: dist }
+}
+
+const sameVal = (a: number, b: number): boolean => {
+  const diff = Math.abs(a - b)
+  return diff < 0.000000001
+}
+
+export const part2 = (
+  input: string,
+  start: Asteroid,
+  vapourLimit = 200,
+): number => {
+  const asteroids = getAsteroids(input)
+  const startIndex = asteroids.findIndex(asteroid =>
+    sameAsteroid(asteroid, start),
+  )
+  asteroids.splice(startIndex, 1)
+  const angles: AsteroidAngle[] = []
+  for (let i = 0; i < asteroids.length; ++i) {
+    const asteroid = asteroids[i]
+    angles.push(calcAngle(asteroid, start))
+  }
+  angles.sort((a, b) => {
+    if (sameVal(a.angle, b.angle)) return a.distance < b.distance ? -1 : 1
+    return a.angle < b.angle ? -1 : 1
+  })
+
+  let i = 0
+  const vapedList: AsteroidAngle[] = []
+  for (let j = 0; j < 5000; ++j) {
+    const target = angles[i]
+    target.vaporized = true
+    vapedList.push(target)
+    if (vapedList.length === vapourLimit) break
+    for (let k = 0; k < 500; ++k) {
+      i = (i + 1) % angles.length
+      const nextTarget = angles[i]
+      // Is it already vaped?
+      if (nextTarget.vaporized) continue
+      // Is it the same value as target?
+      if (sameVal(target.angle, nextTarget.angle)) continue
+      break
+    }
+  }
+
+  const vaped = vapedList.pop()
+  if (!vaped) return -1
+  return vaped.asteroid.x * 100 + vaped.asteroid.y
 }
